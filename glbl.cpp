@@ -16,13 +16,6 @@ static set<string> good;
 static set<string> seen;
 static regex re_uncolor;
 
-static string default_patts[] = {
-    "\\d\\d:\\d\\d:\\d\\d",
-    "\\d\\d\\d\\d-\\d\\d-\\d\\d",
-    "0x[[:xdigit:]]+",
-    "\\d+",
-    "",
-};
 
 static char *opt_path_config = nullptr;
 static bool opt_debug = false;
@@ -90,7 +83,7 @@ static void usage(const char *fname)
         << "\n"
         << "options:\n"
         << "\n"
-        << "  -c FILE  load configuration from FILE\n"
+        << "  -c FILE  load configuration from FILE. Defaults to ~/.glbl.conf\n"
         << "\n"
         << "  -g       omit good lines\n"
         << "  -b       omit bad lines\n"
@@ -112,14 +105,14 @@ static void usage(const char *fname)
         << "\n"
         << "  seen: 'bad' lines that are seen more then once\n"
         << "\n"
-        << "If the -d option is not given a limited fixed list of patterns is used,\n"
-        << "dropping common timestamps, decimal and hexidecimal numbers\n"
         ;
 }
 
-static void read_config(const char *fname)
+static void read_config(string fname)
 {
-    ifstream file(fname);
+    ifstream file(fname.c_str());
+
+    cerr << "Reading config from " << fname << "\n";
 
     if(file.fail()) {
         cerr << "Error opening " << opt_path_config << ": " << strerror(errno) << "\n";
@@ -173,9 +166,7 @@ int main(int argc, char **argv)
     if(opt_path_config) {
         read_config(opt_path_config);
     } else {
-        for(int i=0; default_patts[i] != ""; i++) {
-            res.push_back(regex(default_patts[i]));
-        }
+        read_config(string(getenv("HOME")) + "/.glbl.conf");
     }
 
     for(int i=0; i<argc; i++) {
