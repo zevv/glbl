@@ -3,7 +3,7 @@ usage: ./glbl [options] [good_file [...]] <bad_file>
 
 options:
 
-  -c FILE  load configuration from FILE
+  -c FILE  load configuration from FILE. Defaults to ~/.glbl.conf
 
   -g       omit good lines
   -b       omit bad lines
@@ -24,7 +24,4 @@ are classified into three groups that are displayed in different colors:
   bad:  lines that are were not seen in one of the 'good' files
 
   seen: 'bad' lines that are seen more then once
-
-If the -d option is not given a limited fixed list of patterns is used,
-dropping common timestamps, decimal and hexidecimal numbers
 ```
